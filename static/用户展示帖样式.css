@@ -1,0 +1,16 @@
+/* CSS Document */
+
+		.newdiv{
+			width:auto;
+			padding:20px;
+			border:2px solid hsla(320,100%,50%,0.22);
+			border-style:outset;
+			margin:30px 50px 30px 50px;
+			background-color:hsla(0,0%,0%,0.44);
+		}
+		.text-for-main-artiele{
+			color:hsla(0,0%,100%,1.00);
+		}
+		h1{
+			color:hsla(42,100%,55%,0.91);
+		}

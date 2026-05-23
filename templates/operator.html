@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>运营商后台管理</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
+        body{background:#1e1e2f;padding:30px;color:#fff;}
+        h1{text-align:center;margin-bottom:30px;color:#03e9f4;}
+        .post-item{
+            background:rgba(255,255,255,0.1);
+            padding:15px;
+            margin:12px 0;
+            border-radius:8px;
+        }
+        .post-info{margin-bottom:10px;line-height:1.6;}
+        .oper-btn{
+            padding:6px 12px;
+            border:none;
+            border-radius:4px;
+            margin-right:8px;
+            cursor:pointer;
+        }
+        .btn-recommend{background:#03e9f4;color:#000;}
+        .btn-save{background:#28a745;color:#fff;}
+        .post-title{
+            color:#03e9f4;
+            cursor:pointer;
+            text-decoration:underline;
+        }
+        select.category-select{
+            padding:6px;
+            border-radius:4px;
+            background:#222;
+            color:#fff;
+            border:1px solid #ccc;
+            margin-right:8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>运营商帖子管理后台</h1>
+
+    {% for post in posts %}
+    <div class="post-item">
+        <div class="post-info">
+            <div>帖子ID：{{post.id}}</div>
+            <div>标题：
+                <span class="post-title" onclick="window.open('/operator/post/{{post.id}}','_self')">
+                    {{post.title}}
+                </span>
+            </div>
+            <div>发布作者：{{post.author}}</div>
+            <div>当前分类：{{post.category}}</div>
+            <div>浏览量：{{post.views}}</div>
+        </div>
+
+        <!-- 下拉分类选择 -->
+        <select class="category-select" data-id="{{post.id}}">
+            <option value="交流" {% if post.category=='交流' %}selected{% endif %}>交流</option>
+            <option value="赛事" {% if post.category=='赛事' %}selected{% endif %}>赛事</option>
+            <option value="官方" {% if post.category=='官方' %}selected{% endif %}>官方</option>
+            <option value="更多" {% if post.category=='更多' %}selected{% endif %}>更多</option>
+        </select>
+
+        <button class="oper-btn btn-save" onclick="editCategory({{post.id}})">保存分类</button>
+        <button class="oper-btn btn-recommend" onclick="recommendPost({{post.id}})">推荐置顶</button>
+    </div>
+    {% endfor %}
+
+<script>
+    async function editCategory(postId){
+        const sel = document.querySelector(`.category-select[data-id="${postId}"]`);
+        const newCate = sel.value.trim();
+        const res = await fetch('/api/operator/edit-category',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({post_id:postId, category:newCate})
+        });
+        const data = await res.json();
+        alert(data.msg);
+        location.reload();
+    }
+
+    async function recommendPost(postId){
+        if(!confirm("确定推荐置顶？（与同游戏最小ID交换）")) return;
+        const res = await fetch('/api/operator/recommend',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({post_id:postId})
+        });
+        const data = await res.json();
+        alert(data.msg);
+        location.reload();
+    }
+</script>
+</body>
+</html>

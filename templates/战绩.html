@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MOBA战绩 · 侧边栏导航</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='战绩的详细展示.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='通用样式.css') }}">   
+    <style>
+        /* 修复侧边栏样式，让菜单一行一个 */
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .menu-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6B7280;
+            margin: 16px 0 8px 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .menu-item i {
+            width: 20px;
+            color: #4B5563;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .menu-item:hover {
+            background: #F3F4F6;
+            transform: translateX(4px);
+        }
+        .menu-item.active {
+            background: rgba(59,130,246,0.1);
+            color: #3B82F6;
+        }
+        .menu-item.active i {
+            color: #3B82F6;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span>MOBA 竞技场</span>
+        </div>
+        <button class="navbar-toggler" id="navbarToggleBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <div class="content-wrapper">
+        <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+        <div class="menu-title">功能菜单</div>
+        <div class="sidebar-menu">
+            <a href="/home" class="menu-item">
+                <i class="fas fa-user-circle"></i>
+                <span>个人中心</span>
+            </a>
+            <a href="/zhanji" class="menu-item active">
+                <i class="fas fa-trophy"></i>
+                <span>查看战绩</span>
+            </a>
+            <a href="/tiezi" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>查看帖子</span>
+            </a>
+            <a href="/chuzhuang" class="menu-item">
+                <i class="fas fa-shopping-bag"></i>
+                <span>获取出装</span>
+            </a>
+            <!-- 新增：游戏攻略 -->
+            <a href="/guide" class="menu-item">
+                <i class="fas fa-book-open"></i>
+                <span>游戏攻略</span>
+            </a>
+        </div>
+    </div>
+</aside>
+        
+        <div class="sidebar-overlay" id="overlay"></div>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="content-title">
+                    <i class="fas fa-chart-line"></i> 战绩详情
+                </div>
+            </div>
+            <div class="stats-scroll">
+                <div class="stats-container">
+                    <div class="player-overview">
+                        <div class="player-info">
+                            <div class="player-avatar">
+    <img src="{{ user.avatar if user.avatar else '/static/default_avatar.png' }}" 
+     style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+</div>
+                            <div class="player-details">
+                                <h3>{{ login_user }}</h3>
+                                <p><i class="fas fa-server"></i> {{ user.whichgame }}</p>
+                            </div>
+                        </div>
+                        <div class="rank-badge">
+                            <span>🏆 综合胜率 <span id="win_rate">0</span>%</span> &nbsp; | &nbsp; 本赛段 <span id="total_game">0</span>场
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4><i class="fas fa-skull"></i> KDA 比率</h4>
+                            <div class="kda-row">
+                                <span class="kda-number" id="avg_kda_ratio">0</span>
+                                <span class="kda-detail">( 击杀/死亡/助攻 )</span>
+                            </div>
+                            <div class="kill-death" id="avg_kda">0 / 0 / 0</div>
+                            <div class="progress-bar-bg"><div class="progress-fill" id="prog_kda" style="width:0%"></div></div>
+                            <div style="font-size: 0.7rem; color:#94A3B8;">场均参团率 <span id="avg_part">0</span>%</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <h4><i class="fas fa-coins"></i> 经济 与 输出</h4>
+                            <div>场均金币 <strong style="color:#F97316;" id="avg_money">0</strong>k</div>
+                            <div style="margin-top: 12px;">伤害占比 <strong id="avg_damage">0</strong>% <span style="margin-left: 12px;">承伤占比 <strong id="avg_dtp">0</strong>%</span></div>
+                            <div class="progress-bar-bg mt-2"><div class="progress-fill" id="prog_damage" style="width:0%; background:#3B82F6;"></div></div>
+                            <div style="font-size: 0.7rem; margin-top: 8px;">数据实时统计自数据库</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <h4><i class="fas fa-flag-checkered"></i> 近期状态</h4>
+                            <div>最近<span id="total_game2">0</span>场: <span style="color:#22C55E;" id="win_count">0</span>胜 <span id="lose_count">0</span>负</div>
+                            <div style="margin-top: 12px;">数据全部来自你的对战记录</div>
+                            <div class="progress-bar-bg mt-2"><div class="progress-fill" id="prog_win" style="width:0%; background:#8B5CF6;"></div></div>
+                            <div>总对局: <span id="total_game3">0</span> 场</div>
+                        </div>
+                    </div>
+
+                    <div class="match-list">
+                        <table class="match-table">
+                            <thead>
+                                <tr>
+                                    <th>英雄</th>
+                                    <th>结果</th>
+                                    <th>K/D/A</th>
+                                    <th>经济</th>
+                                    <th>参团率</th>
+                                    <th>伤害占比</th>
+                                    <th>承伤占比</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="matchBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div style="display: flex; gap: 20px; margin-top: 28px; flex-wrap: wrap;">
+                        <div class="always-use" style="width:100%;">
+                            <h4 style="color:#F8FAFC; margin-bottom: 16px;"><i class="fas fa-chart-simple"></i> 常用英雄胜率</h4>
+                            <div id="hero1" style="display:none;">
+                                <span style="color:#94A3B8;" id="hero1_name"></span> 
+                                <span style="float:right;" id="hero1_rate"></span>
+                                <div class="progress-bar-bg mt-1">
+                                    <div class="progress-fill" id="hero1_prog" style="width:0%"></div>
+                                </div>
+                            </div>
+                            <div class="mt-2" id="hero2" style="display:none;">
+                                <span style="color:#94A3B8;" id="hero2_name"></span> 
+                                <span style="float:right;" id="hero2_rate"></span>
+                                <div class="progress-bar-bg mt-1">
+                                    <div class="progress-fill" id="hero2_prog" style="width:0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="../javascript/通用js代码.js"></script>
+<script>
+// 从页面获取当前登录用户的 ID（你需要在后端渲染时把 user.id 传到页面）
+const currentUserId = {{ user.id }}; 
+
+fetch("/getRecord?user_id=" + currentUserId)
+.then(res => res.json())
+.then(data => {
+    let total = data.length;
+    let win = 0, lose = 0;
+    let sum_k=0, sum_d=0, sum_a=0;
+    let sum_money=0, sum_damage=0, sum_dtp=0, sum_part=0;
+
+    let heroMap = {};
+    data.forEach(row => {
+        let h = row.hero;
+        if(!heroMap[h]) heroMap[h] = {count:0, win:0};
+        heroMap[h].count++;
+        if(row.result === "胜利") heroMap[h].win++;
+
+        if(row.result==="胜利") win++; else lose++;
+        let kda = row.kda.split("/");
+        sum_k += parseInt(kda[0]); sum_d += parseInt(kda[1]); sum_a += parseInt(kda[2]);
+        sum_money += parseFloat(row.money);
+        sum_damage += parseFloat(row["damage percentage"].replace("%",""));
+        sum_dtp += parseFloat(row.dtp.replace("%",""));
+        sum_part += parseFloat(row["participation rate"].replace("%",""));
+    });
+
+    let heroes = Object.entries(heroMap).sort((a,b)=>b[1].count - a[1].count);
+    let top1 = heroes[0], top2 = heroes[1];
+
+    let win_rate = total>0 ? (win/total*100).toFixed(1) : 0;
+    let avg_k = total>0 ? (sum_k/total).toFixed(1) : 0;
+    let avg_d = total>0 ? (sum_d/total).toFixed(1) : 0;
+    let avg_a = total>0 ? (sum_a/total).toFixed(1) : 0;
+    let avg_kda_ratio = avg_d !=0 ? ((parseFloat(avg_k)+parseFloat(avg_a))/parseFloat(avg_d)).toFixed(1) : 0;
+    let avg_money = total>0 ? (sum_money/total).toFixed(1) : 0;
+    let avg_damage = total>0 ? (sum_damage/total).toFixed(1) : 0;
+    let avg_dtp = total>0 ? (sum_dtp/total).toFixed(1) : 0;
+    let avg_part = total>0 ? (sum_part/total).toFixed(1) : 0;
+
+    document.getElementById("win_rate").innerText = win_rate;
+    document.getElementById("total_game").innerText = total;
+    document.getElementById("total_game2").innerText = total;
+    document.getElementById("total_game3").innerText = total;
+    document.getElementById("win_count").innerText = win;
+    document.getElementById("lose_count").innerText = lose;
+
+    document.getElementById("avg_kda_ratio").innerText = avg_kda_ratio;
+    document.getElementById("avg_kda").innerText = `${avg_k} / ${avg_d} / ${avg_a}`;
+    document.getElementById("avg_part").innerText = avg_part;
+    document.getElementById("prog_kda").style.width = avg_part+"%";
+
+    document.getElementById("avg_money").innerText = avg_money;
+    document.getElementById("avg_damage").innerText = avg_damage;
+    document.getElementById("avg_dtp").innerText = avg_dtp;
+    document.getElementById("prog_damage").style.width = avg_damage+"%";
+    document.getElementById("prog_win").style.width = win_rate+"%";
+
+    if(top1){
+        document.getElementById("hero1").style.display="block";
+        document.getElementById("hero1_name").innerText = top1[0];
+        let r = (top1[1].win/top1[1].count*100).toFixed(1);
+        document.getElementById("hero1_rate").innerText = `${r}% (${top1[1].count}场)`;
+        document.getElementById("hero1_prog").style.width = r+"%";
+    }
+    if(top2){
+        document.getElementById("hero2").style.display="block";
+        document.getElementById("hero2_name").innerText = top2[0];
+        let r = (top2[1].win/top2[1].count*100).toFixed(1);
+        document.getElementById("hero2_rate").innerText = `${r}% (${top2[1].count}场)`;
+        document.getElementById("hero2_prog").style.width = r+"%";
+    }
+
+    let body = document.getElementById("matchBody");
+    data.forEach(row => {
+        let cls = row.result==="胜利" ? "victory" : "defeat";
+        body.innerHTML += `
+        <tr>
+            <td>${row.hero}</td>
+            <td class="${cls}">${row.result}</td>
+            <td>${row.kda}</td>
+            <td>${row.money}</td>
+            <td>${row["participation rate"]}</td>
+            <td>${row["damage percentage"]}</td>
+            <td>${row.dtp}</td>
+        </tr>`;
+    });
+})
+</script>
+</body>
+</html>

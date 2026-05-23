@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帖子详情</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url("/static/background.png") center/cover fixed;
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: rgba(0,0,0,0.5);
+            padding: 30px;
+            border-radius: 16px;
+            backdrop-filter: blur(5px);
+        }
+        .content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        .back-btn {
+            margin-bottom: 20px;
+        }
+
+        /* 发帖人信息 */
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .author-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        /* 评论区 */
+        .comment-section {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        .comment-item {
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .comment-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        .comment-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .comment-content {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .comment-form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/tiezi" class="btn btn-outline-light back-btn">
+            <i class="fas fa-arrow-left"></i> 返回列表
+        </a>
+
+        <!-- ✅ 发帖人头像 + 名称 -->
+        <div class="post-author">
+            <img src="{{ post.author_avatar if post.author_avatar else '/static/default_avatar.png' }}" class="author-avatar">
+            <span class="author-name">{{ post.author_name }}</span>
+        </div>
+
+        <h1>{{ post.title }}</h1>
+        <hr style="border-color: rgba(255,255,255,0.3);">
+        <div class="content">{{ post.content }}</div>
+
+        <div class="comment-section">
+            <h4 class="mb-3">评论区 ({{ comments|length }})</h4>
+            {% for c in comments %}
+            <div class="comment-item">
+                <div class="comment-user">
+                    <img src="{{ c.avatar if c.avatar else '/static/default_avatar.png' }}" class="comment-avatar">
+                    <span>{{ c.username }}</span>
+                </div>
+                <div class="comment-content">{{ c.content }}</div>
+            </div>
+            {% else %}
+            <div class="text-center text-muted py-3">暂无评论</div>
+            {% endfor %}
+
+            <form action="/post/comment/{{ post.id }}" method="post" class="comment-form">
+                <div class="mb-3">
+                    <textarea name="content" class="form-control bg-dark text-white" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">发表评论</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

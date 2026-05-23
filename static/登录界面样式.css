@@ -1,0 +1,192 @@
+	*{
+  		box-sizing: border-box;
+		color:hsla(0,0%,100%,1.00);
+	}
+		
+		html{
+			
+		    background-color:linear-gradient(0deg,rgba(0,0,0,0.4) 0%,rgba(0,0,0,0.75) 100%);
+			background-image:url("../img/background.png");
+		}
+
+		input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+		label {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+		input[type=submit] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+		input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+
+		h2 {
+            text-align: center;
+            color: aliceblue;
+            margin-bottom: 30px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+		
+		.container {
+  border-radius: 5px;
+  background-color: hsla(0,0%,0%,0.7);
+  padding: 20px;
+	width:400px;
+	box-shadow: 0 15px 25px 0 rgba(0, 0, 0, .6);
+	margin:100px auto;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+		.col-50{
+			float:left;
+			width:50%;
+			margin-top:6px;
+		}
+
+/* 清除浮动 */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+ 
+/* 响应式布局 layout - 在屏幕宽度小于 600px 时， 设置为上下堆叠元素 */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+		
+		input,
+        button {
+            background: transparent;
+            border: 0;
+            outline: none;
+        }
+		
+
+		
+		.btn {
+            padding: 10px 20px;
+            margin-top: 30px;
+            color: #03e9f4;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            left: 35%;
+			background-color:hsla(0,0%,0%,0.61);
+			text-align: center;
+
+        }
+
+        .btn:hover {
+            border-radius: 5px;
+            color: #fff;
+            background: #03e9f4;
+            box-shadow: 0 0 5px 0 #03e9f4,
+                0 0 25px 0 #03e9f4,
+                0 0 50px 0 #03e9f4,
+                0 0 100px 0 #03e9f4;
+            transition: all 1s linear;
+        }
+
+        .btn>span {
+            position: absolute;
+        }
+
+        .btn>span:nth-child(1) {
+            width: 100%;
+            height: 2px;
+            background: -webkit-linear-gradient(left, transparent, #03e9f4);
+            left: -100%;
+            top: 0px;
+            animation: line1 1s linear infinite;
+        }
+
+        @keyframes line1 {
+
+            50%,
+            100% {
+                left: 100%;
+            }
+        }
+
+        .btn>span:nth-child(2) {
+            width: 2px;
+            height: 100%;
+            background: -webkit-linear-gradient(top, transparent, #03e9f4);
+            right: 0px;
+            top: -100%;
+            animation: line2 1s 0.25s linear infinite;
+        }
+
+        @keyframes line2 {
+
+            50%,
+            100% {
+                top: 100%;
+            }
+        }
+
+        .btn>span:nth-child(3) {
+            width: 100%;
+            height: 2px;
+            background: -webkit-linear-gradient(left, #03e9f4, transparent);
+            left: 100%;
+            bottom: 0px;
+            animation: line3 1s 0.75s linear infinite;
+        }
+
+        @keyframes line3 {
+
+            50%,
+            100% {
+                left: -100%;
+            }
+        }
+
+        .btn>span:nth-child(4) {
+            width: 2px;
+            height: 100%;
+            background: -webkit-linear-gradient(top, transparent, #03e9f4);
+            left: 0px;
+            top: 100%;
+            animation: line4 1s 1s linear infinite;
+        }
+
+        @keyframes line4 {
+
+            50%,
+            100% {
+                top: -100%;
+            }
+        }

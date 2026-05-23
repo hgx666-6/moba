@@ -1,0 +1,191 @@
+/* 玩家概要卡片 */
+        .player-overview {
+            background: linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.75) 100%);
+			backdrop-filter: blur(8px);
+            border-radius: 28px;
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            
+        }
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .player-avatar {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(145deg, #F97316, #EA580C);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+        .player-details h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #F8FAFC;
+        }
+        .player-details p {
+            color: #94A3B8;
+            font-size: 0.8rem;
+        }
+        .rank-badge {
+            background: #1E293B;
+            padding: 8px 20px;
+            border-radius: 40px;
+            border-left: 3px solid #F97316;
+        }
+        .rank-badge span {
+            color: #F97316;
+            font-weight: 700;
+        }
+
+
+
+
+        .container {
+            margin: 0 auto;
+            padding: 32px 16px;
+            max-width: 800px;
+			float:left;
+			border-radius:24px;
+			background-color:rgba(0,0,0,0.5);
+			backdrop-filter:blur(8px);
+			box-shadow:0 5px 10px rgba(0,0,0,0.4);
+        }
+
+        /* 标签导航栏样式 */
+        .tab-wrap {
+            display: flex;
+            border-bottom: 1px solid #4B5563;
+            margin-bottom: 24px;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background-color: #1D2129;
+            color: #86909C;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+        /* 标签hover样式 */
+        .tab-btn:hover {
+            background-color: #2C3038;
+            color: #E5E6EB;
+        }
+
+
+        /* 标签激活常态样式 */
+        .tab-btn.active {
+            background-color: #2C3038;
+            color: #E5E6EB;
+            border-bottom: 2px solid #165DFF;
+        }
+
+        /* 内容区块容器 */
+        .content-block {
+            display: none;
+        }
+
+        .content-block.show {
+            display: block;
+        }
+
+        /* 出装标题样式 */
+        .build-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #165DFF;
+            margin-bottom: 12px;
+        }
+
+        /* 装备网格布局 */
+        .equip-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+			overflow:visible;
+        }
+
+        /* 装备单项容器 & Tooltip */
+        .item-container {
+            position: relative;
+			overflow:visible;
+        }
+        /* 圆形装备框 */
+        .equip-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #4B5563;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .equip-circle:hover {
+            transform: scale(1.1);
+        }
+        .equip-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 通用气泡提示框 */
+        .tooltip-mess {
+            position: absolute;
+            left: 50%;
+            bottom: 100%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            width: 192px;
+            padding: 8px;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #E5E6EB;
+            font-size: 14px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 50;
+            visibility: hidden;
+			
+        }
+		.item-container:hover .tooltip-mess {
+            visibility: visible;
+        }
+        .tooltip-mess .tip-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .tooltip-mess .tip-desc {
+            font-size: 12px;
+            color: #86909C;
+        }
+        .tooltip-mess .tip-passive {
+            font-size: 12px;
+            color: #FACC15;
+            margin-top: 4px;
+        }
+        
+        /* 眼睛图标容器样式 */
+        .eye-icon-wrap {
+            display: inline-block;
+            cursor: pointer;
+            position: relative;
+            color: #86909C;
+            font-size: 18px;
+        }
+        .eye-icon-wrap:hover {
+            color: #E5E6EB;
+        }
+

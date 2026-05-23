@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<!--可以用于用户帖子总模板，审核总模板，英雄·列表界面模板，咨询总模板-->
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>这里是****wiki</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="/static/通用样式.css" rel="stylesheet">
+    <link href="/static/英雄详细展示相关.css" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url("/static/background.png") center/cover fixed !important;
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+            background-attachment: fixed !important;
+        }
+    </style>
+</head>
+<style>
+/* 修复侧边栏不挤、一行一个 */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: #111827;
+    padding: 10px;
+}
+.sidebar-inner {
+    width: 100%;
+}
+.menu-title {
+    color: #fff;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+.menu-item i {
+    width: 20px;
+}
+.menu-item:hover {
+    background: #1f2937;
+}
+.menu-item.active {
+    background: #1f2937;
+    color: #38bdf8;
+}
+</style>
+<body>
+<div class="app-container">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span style="color:#ffffff"><img alt="..." src="/static/background.png" height="20" width="40">****wiki</span>
+        </div>
+        <button class="navbar-toggler" id="navbarToggleBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <div class="content-wrapper">
+       <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+        <div class="menu-title">功能菜单</div>
+        <div class="sidebar-menu">
+            <a href="/home" class="menu-item">
+                <i class="fas fa-user-circle"></i>
+                <span>个人中心</span>
+            </a>
+            <a href="/zhanji" class="menu-item">
+                <i class="fas fa-trophy"></i>
+                <span>查看战绩</span>
+            </a>
+            <a href="/tiezi" class="menu-item">
+                <i class="fas fa-file-alt"></i>
+                <span>查看帖子</span>
+            </a>
+            <a href="/chuzhuang" class="menu-item active">
+                <i class="fas fa-shopping-bag"></i>
+                <span>获取出装</span>
+            </a>
+            <!-- 新增：游戏攻略 -->
+            <a href="/guide" class="menu-item">
+                <i class="fas fa-book-open"></i>
+                <span>游戏攻略</span>
+            </a>
+        </div>
+    </div>
+</aside>
+        <div class="sidebar-overlay" id="overlay"></div>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="content-title"><i class="fas fa-image" style="margin-right: 8px;"></i> 英雄出装</div>
+            </div>
+			
+            <div class="scroll-area">
+                <div class="player-overview">
+                    <div class="player-info">
+                        <div class="player-avatar">
+                            <img src="{{ user.avatar if user.avatar else '/static/default_avatar.png' }}" 
+     style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                        </div>
+                        <div class="player-details">
+                            <h3>{{ login_user }}</h3>
+                        </div>
+                    </div>
+                    <div class="rank-badge">
+                        <span>🏆 综合胜率 {{ win_rate }}%</span> &nbsp; | &nbsp; 本赛段 {{ total_game }} 场
+                    </div>
+                </div>
+				
+                <h1>这里是关于英雄，策划方给予的一些意见</h1>
+                <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+				
+                <div class="container">
+        			<div class="tab-wrap">
+                        <button id="tabMine" class="tab-btn active" onclick="switchTab('mine')">我的</button>
+                        <button id="tabRecommend" class="tab-btn" onclick="switchTab('recommend')">ai助手</button>
+                    </div>
+
+        			<!-- ====================== 王者荣耀出装 ====================== -->
+                    {% if user and user.whichgame == '王者' %}
+        			<div id="contentMine" class="content-block show">
+            			<div class="build-title">攻速暴击流</div>
+            			<div class="equip-grid">
+                <div class="item-container"><div class="equip-circle"><img src="/static/攻速鞋.jpg"></div><div class="tooltip-mess"><div class="tip-name">急速战靴</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/泣血.jpg"></div><div class="tooltip-mess"><div class="tip-name">泣血之刃</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/无尽.jpg"></div><div class="tooltip-mess"><div class="tip-name">无尽战刃</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/宗师.jpg"></div><div class="tooltip-mess"><div class="tip-name">宗师之力</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/破晓.jpg"></div><div class="tooltip-mess"><div class="tip-name">破晓</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/逐日.jpg"></div><div class="tooltip-mess"><div class="tip-name">逐日之弓</div></div></div>
+            </div>
+
+            			<div class="build-title">法装输出流</div>
+            			<div class="equip-grid">
+                <div class="item-container"><div class="equip-circle"><img src="/static/秘法鞋.jpg"></div><div class="tooltip-mess"><div class="tip-name">秘法之靴</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/回响.jpg"></div><div class="tooltip-mess"><div class="tip-name">回响之杖</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/帽子.jpg"></div><div class="tooltip-mess"><div class="tip-name">博学者之怒</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/虚无法杖.jpg"></div><div class="tooltip-mess"><div class="tip-name">虚无法杖</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/辉月.jpg"></div><div class="tooltip-mess"><div class="tip-name">辉月</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/大书.jpg"></div><div class="tooltip-mess"><div class="tip-name">贤者之书</div></div></div>
+            </div>
+            </div>
+
+                    <!-- ====================== 英雄联盟出装 ====================== -->
+                    {% elif user and user.whichgame == '联盟' %}
+        			<div id="contentMine" class="content-block show">
+            			<div class="build-title">ADC暴击流</div>
+            			<div class="equip-grid">
+                <div class="item-container"><div class="equip-circle"><img src="/static/狂战士胫甲.jpg"></div><div class="tooltip-mess"><div class="tip-name">狂战士胫甲</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/饮血剑.jpg"></div><div class="tooltip-mess"><div class="tip-name">饮血剑</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/无尽之刃.jpg"></div><div class="tooltip-mess"><div class="tip-name">无尽之刃</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/疾射火炮.jpg"></div><div class="tooltip-mess"><div class="tip-name">疾射火炮</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/凡性的提醒.jpg"></div><div class="tooltip-mess"><div class="tip-name">凡性的提醒</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/水银弯刀.jpg"></div><div class="tooltip-mess"><div class="tip-name">水银弯刀</div></div></div>
+            </div>
+
+            			<div class="build-title">法师爆发流</div>
+            			<div class="equip-grid">
+                <div class="item-container"><div class="equip-circle"><img src="/static/法师之靴.jpg"></div><div class="tooltip-mess"><div class="tip-name">法师之靴</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/卢登的激荡.jpg"></div><div class="tooltip-mess"><div class="tip-name">卢登的激荡</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/灭世者之帽.jpg"></div><div class="tooltip-mess"><div class="tip-name">灭世者之帽</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/虚空之杖.jpg"></div><div class="tooltip-mess"><div class="tip-name">虚空之杖</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/沙漏.jpg"></div><div class="tooltip-mess"><div class="tip-name">中娅沙漏</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/大天使之杖.png"></div><div class="tooltip-mess"><div class="tip-name">大天使之杖</div></div></div>
+            </div>
+            </div>
+
+                    {% else %}
+                    <!-- 默认显示王者 -->
+        			<div id="contentMine" class="content-block show">
+            			<div class="build-title">双穿苍穹流</div>
+            			<div class="equip-grid">
+                <div class="item-container"><div class="equip-circle"><img src="/static/攻速鞋.jpg"></div><div class="tooltip-mess"><div class="tip-name">急速战靴</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/泣血.jpg"></div><div class="tooltip-mess"><div class="tip-name">泣血之刃</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/无尽.jpg"></div><div class="tooltip-mess"><div class="tip-name">无尽战刃</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/宗师.jpg"></div><div class="tooltip-mess"><div class="tip-name">宗师之力</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/破晓.jpg"></div><div class="tooltip-mess"><div class="tip-name">破晓</div></div></div>
+                <div class="item-container"><div class="equip-circle"><img src="/static/逐日.jpg"></div><div class="tooltip-mess"><div class="tip-name">逐日之弓</div></div></div>
+            </div>
+            </div>
+                    {% endif %}
+
+                    <div id="contentRecommend" class="content-block">
+                        <div id="chatContainer" style="height:400px;overflow-y:auto;padding:10px;background:#ffffff; border-radius:12px; margin-bottom:10px; border:1px solid #ddd;"></div>
+                        <input type="text" id="question" placeholder="输入问题..." style="width:100%;padding:10px;border-radius:8px;">
+                        <button onclick="sendQuestion()" style="width:100%;margin-top:8px;padding:10px;border-radius:8px;background:#0d6efd;color:white;border:0;">发送</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="/static/通用js代码.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  switchTab('mine');
+});
+
+function switchTab(tab) {
+  document.querySelectorAll('.content-block').forEach(el => { el.classList.remove('show'); el.style.display = 'none'; });
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  
+  const contentId = 'content' + tab.charAt(0).toUpperCase() + tab.slice(1);
+  const btnId = 'tab' + tab.charAt(0).toUpperCase() + tab.slice(1);
+  
+  document.getElementById(contentId).classList.add('show');
+  document.getElementById(contentId).style.display = 'block';
+  document.getElementById(btnId).classList.add('active');
+}
+
+function sendQuestion() {
+    let q = document.getElementById("question").value; if (!q) return;
+    if (!document.getElementById('contentRecommend').classList.contains('show')) { alert("请切换到 ai 助手标签再提问"); return; }
+    let c = document.getElementById("chatContainer");
+    c.innerHTML += `<div style="color:#0d6efd;margin:5px 0;">你：${q}</div>`;
+    fetch("/api/ask-ai", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question: q }) })
+    .then(res => res.json()).then(data => {
+        c.innerHTML += `<div style="color:#000;margin:5px 0;">AI：${data.answer}</div>`;
+        c.scrollTop = c.scrollHeight;
+    });
+    document.getElementById("question").value = "";
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  const input = document.getElementById('question');
+  input.addEventListener('keydown', function(e) { if (e.key === 'Enter') { e.preventDefault(); sendQuestion(); } });
+});
+</script>
+</body>
+</html>

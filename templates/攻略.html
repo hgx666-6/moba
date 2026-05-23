@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>游戏攻略</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/通用样式——整体的.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url("/static/background.png") center/cover fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            min-height: 100vh;
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid #E5E7EB;
+            position: relative;
+            z-index: 100;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1F2937;
+        }
+        .navbar-toggler {
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            color: #4B5563;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .navbar-toggler:hover {
+            background: #F3F4F6;
+        }
+        .sidebar {
+            width: 260px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            border-right: 1px solid #E5E7EB;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            padding: 20px;
+            height: 100%;
+            z-index: 90;
+        }
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .menu-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6B7280;
+            margin: 16px 0 8px 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #1F2937;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .menu-item i {
+            width: 20px;
+            color: #4B5563;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .menu-item:hover {
+            background: #F3F4F6;
+            transform: translateX(4px);
+        }
+        .menu-item.active {
+            background: rgba(59,130,246,0.1);
+            color: #3B82F6;
+        }
+        .menu-item.active i {
+            color: #3B82F6;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.4);
+                z-index: 80;
+                display: none;
+                backdrop-filter: blur(2px);
+            }
+            .sidebar-overlay.show {
+                display: block;
+            }
+        }
+        @media (min-width: 769px) {
+            .sidebar-overlay {
+                display: none !important;
+            }
+            .navbar-toggler {
+                display: none;
+            }
+        }
+        .main-content {
+            flex: 1;
+            overflow: hidden;
+            width: 100%;
+        }
+        .content-header {
+            padding: 20px 28px;
+            border-bottom: 1px solid rgba(229,231,235,0.3);
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1F2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .scroll-area {
+            height: calc(100% - 62px);
+            overflow-y: auto;
+            padding: 28px;
+        }
+        .content-wrapper {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-title {
+            color: white !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <span style="color:#ffffff"><img alt="..." src="../img/background.png" height="20" width="40">****wiki</span>
+        </div>
+        <button class="navbar-toggler" id="navbarToggleBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <div class="content-wrapper">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <div class="menu-title">功能菜单</div>
+            <div class="sidebar-menu">
+                <a href="/home" class="menu-item">
+                    <i class="fas fa-user-circle"></i>
+                    <span>个人中心</span>
+                </a>
+                <a href="/zhanji" class="menu-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>查看战绩</span>
+                </a>
+                <a href="/tiezi" class="menu-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>查看帖子</span>
+                </a>
+                <a href="/chuzhuang" class="menu-item">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>获取出装</span>
+                </a>
+                <!-- 游戏攻略，当前页面自动高亮 -->
+                <a href="/guide" class="menu-item active">
+                    <i class="fas fa-book-open"></i>
+                    <span>游戏攻略</span>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+        <div class="sidebar-overlay" id="overlay"></div>
+
+        <main class="main-content">
+            <div class="content-header">
+                <div class="content-title"><i class="fas fa-book" style="margin-right: 8px;"></i>游戏攻略</div>
+            </div>
+            <div class="scroll-area">
+                <div class="container">
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
+                       {% for item in news %}
+<div class="col-12">
+    <div class="card" style="background:rgba(0,0,0,0.5);border-color:antiquewhite;">
+        <div class="card-body d-flex align-items-center">
+            <!-- 左侧内容：标题 + 简介 -->
+            <div class="flex-grow-1 me-3">
+                <h5 class="card-title mb-1">{{ item.title }}</h5>
+                <p class="text-white-50 mb-0">{{ item.content|truncate(50) }}</p>
+            </div>
+            <!-- 右侧按钮：全部对齐在同一垂直线上 -->
+            <a href="/guide/detail/{{ item.id }}" class="btn btn-outline-primary" style="width:110px;">查看详情</a>
+        </div>
+    </div>
+</div>
+{% else %}
+                        <div class="col-12">
+                            <div class="alert alert-light text-center">暂无攻略</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="../javascript/通用js代码.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const toggleBtn = document.getElementById('navbarToggleBtn');
+        function toggleSidebar() {
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        }
+        toggleBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 769) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+        });
+        const menuItems = document.querySelectorAll('.menu-item');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function() {
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                if (window.innerWidth < 769) {
+                    toggleSidebar();
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

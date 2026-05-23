@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员后台管理</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui;}
+        body{background:#0f172a;padding:30px;color:#fff;}
+        h1{text-align:center;margin-bottom:30px;color:#ff7e5f;}
+        .post-item{
+            background:rgba(255,255,255,0.1);
+            padding:18px;
+            margin:12px 0;
+            border-radius:8px;
+        }
+        .post-info{
+            margin-bottom:12px;
+            line-height:1.7;
+        }
+        .oper-btn{
+            padding:6px 12px;
+            border:none;
+            border-radius:4px;
+            margin-right:8px;
+            cursor:pointer;
+        }
+        .btn-save{background:#dc3545;color:#fff;}
+        select.status-select{
+            padding:6px;
+            border-radius:4px;
+            background:#222;
+            color:#fff;
+            border:1px solid #ccc;
+            margin-right:8px;
+        }
+        .content-preview{
+            color:#ccc;
+            font-size:0.9rem;
+            padding:8px 0;
+            word-break: break-all;
+        }
+        .status-tag{
+            padding:2px 8px;
+            border-radius:4px;
+            font-size:0.85rem;
+        }
+        .status-ok{background:#28a745;color:#fff;}
+        .status-ban{background:#dc3545;color:#fff;}
+    </style>
+</head>
+<body>
+    <h1>管理员帖子审核后台</h1>
+
+    {% for post in posts %}
+    <div class="post-item">
+        <div class="post-info">
+            <div>帖子ID：{{ post.id }}</div>
+            <div>帖子标题：{{ post.title }}</div>
+            <div>作者id：{{ post.user_id }}</div>
+            <div>所属分类：{{ post.category }}</div>
+            <div>浏览量：{{ post.views }}</div>
+            <div>
+                当前状态：
+                {% if post.status == 1 %}
+                    <span class="status-tag status-ok">合规</span>
+                {% else %}
+                    <span class="status-tag status-ban">违规</span>
+                {% endif %}
+            </div>
+            <div class="content-preview">帖子完整内容：{{ post.content }}</div>
+        </div>
+
+        <!-- 仅状态修改下拉，无分类、无置顶按钮 -->
+        <select class="status-select" data-id="{{post.id}}">
+            <option value="1" {% if post.status == 1 %}selected{% endif %}>合规</option>
+            <option value="0" {% if post.status == 0 %}selected{% endif %}>违规</option>
+        </select>
+
+        <button class="oper-btn btn-save" onclick="saveStatus({{post.id}})">保存状态修改</button>
+    </div>
+    {% endfor %}
+
+<script>
+    // 管理员：仅修改帖子status状态，无其他权限
+    async function saveStatus(postId){
+        const sel = document.querySelector(`.status-select[data-id="${postId}"]`);
+        const status = sel.value;
+        const res = await fetch('/api/admin/edit-status',{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({post_id:postId, status:status})
+        });
+        const data = await res.json();
+        alert(data.msg);
+        location.reload();
+    }
+</script>
+</body>
+</html>
