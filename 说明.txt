@@ -1,0 +1,4 @@
+代码地址：https://github.com/hgx666-6/moba
+
+
+test.py和templates，static同目录下。先连接数据库mysql，再运行test.py,点击程序运行后终端给出的网址http://localhost:5000，项目可以成功运行
